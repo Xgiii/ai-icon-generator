@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import RadioButton from '../components/RadioButton';
 
@@ -27,9 +28,20 @@ const styles = [
 const shapes = ['circular', 'rounded', 'square'];
 
 function GeneratePage() {
+  const [prompt, setPrompt] = useState('');
+  const [n, setN] = useState('1');
   const [selectedColor, setSelectedColor] = useState('Blue');
   const [selectedStyle, setSelectedStyle] = useState('metalic');
   const [selectedShape, setSelectedShape] = useState('circular');
+
+  async function generateIconHandler() {
+    const data = await axios.post('/api/generate', {
+      prompt,
+      n,
+    });
+
+    console.log(data);
+  }
 
   return (
     <section className='flex flex-col items-start mx-auto space-y-4 max-w-[60%] p-16'>
@@ -40,6 +52,8 @@ function GeneratePage() {
         </h2>
         <input
           type='text'
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
           placeholder='an angry chicken'
           className='bg-transparent ring-2 ring-cyan-500 outline-none rounded-md p-2 w-full'
         />
@@ -101,10 +115,14 @@ function GeneratePage() {
         </h2>
         <input
           type='number'
-          value={1}
+          onChange={(e) => setN(e.target.value)}
+          value={n}
           className='bg-transparent ring-2 ring-cyan-500 outline-none rounded-md p-2 w-full'
         />
-        <button className='px-6 py-2 bg-blue-400 text-gray-800 font-semibold rounded-md uppercase'>
+        <button
+          onClick={generateIconHandler}
+          className='px-6 py-2 bg-blue-400 text-gray-800 font-semibold rounded-md uppercase'
+        >
           Generate
         </button>
       </div>
