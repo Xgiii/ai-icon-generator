@@ -1,10 +1,19 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { getSession } from 'next-auth/react';
 import { Configuration, OpenAIApi } from 'openai';
+import { connectToDb } from '../../utils/db';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const session = await getSession({ req });
+  if (!session) {
+    return res.status(401).json({ message: 'signin required' });
+  }
+
+  const { user } = session;
+
   const { prompt, n, color, style, shape } = req.body;
   const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
@@ -18,6 +27,16 @@ export default async function handler(
       n: +n,
       size: '1024x1024',
     });
+
+    const client = await connectToDb();
+    const usersCol = client.db().collection('users');
+
+    await usersCol.updateOne(
+      { email: user?.email },
+      { $push: { icons: { $each: response.data.data } } }
+    );
+
+    client.close();
 
     res.status(201).json({ data: response.data.data });
   } catch (error: any) {
