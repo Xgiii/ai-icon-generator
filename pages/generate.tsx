@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import RadioButton from '../components/RadioButton';
 
@@ -33,14 +34,30 @@ function GeneratePage() {
   const [selectedColor, setSelectedColor] = useState('Blue');
   const [selectedStyle, setSelectedStyle] = useState('metalic');
   const [selectedShape, setSelectedShape] = useState('circular');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [images, setImages] = useState<{ url?: string }[]>([]);
+
+  const { status } = useSession();
 
   async function generateIconHandler() {
-    const data = await axios.post('/api/generate', {
-      prompt,
-      n,
-    });
-
-    console.log(data);
+    setError('');
+    if (prompt.trim().length < 5) {
+      setError('Type prompt');
+      return;
+    }
+    try {
+      setLoading(true);
+      const { data } = await axios.post('/api/generate', {
+        prompt,
+        n,
+      });
+      setImages((prevState) => [...prevState, ...data.data]);
+      setLoading(false);
+    } catch (error: any) {
+      setLoading(false);
+      setError(error.message);
+    }
   }
 
   return (
@@ -121,10 +138,29 @@ function GeneratePage() {
         />
         <button
           onClick={generateIconHandler}
-          className='px-6 py-2 bg-blue-400 text-gray-800 font-semibold rounded-md uppercase'
+          className={`px-6 py-2 bg-blue-400 text-gray-800 font-semibold rounded-md uppercase disabled:bg-blue-300 ${
+            loading && 'animate-pulse'
+          }`}
+          disabled={status === 'unauthenticated'}
         >
-          Generate
+          {!loading && status === 'authenticated' && 'Generate'}
+          {!loading &&
+            status === 'unauthenticated' &&
+            'sign in to generate icon'}
+          {loading && 'Generating...'}
         </button>
+        <p className='text-red-600 italic font-bold'>{error}</p>
+      </div>
+
+      <div className='flex'>
+        {images.map((image, index) => (
+          <img
+            key={index}
+            src={image.url}
+            alt='generated icon'
+            className='w-[200px] h-[200px] object-center'
+          />
+        ))}
       </div>
     </section>
   );

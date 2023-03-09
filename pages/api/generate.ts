@@ -17,12 +17,9 @@ export default async function handler(
       n: +n,
       size: '1024x1024',
     });
-    console.log(response.data);
 
-    res.status(201).json({ data: response.data });
+    res.status(201).json({ data: response.data.data });
   } catch (error: any) {
-    console.log(error);
-
-    res.status(422).json('Something went wrong');
+    res.status(422).json({ message: error.message });
   }
 }
