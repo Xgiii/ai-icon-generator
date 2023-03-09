@@ -51,6 +51,9 @@ function GeneratePage() {
       const { data } = await axios.post('/api/generate', {
         prompt,
         n,
+        color: selectedColor,
+        style: selectedStyle,
+        shape: selectedShape,
       });
       setImages((prevState) => [...prevState, ...data.data]);
       setLoading(false);
@@ -152,7 +155,7 @@ function GeneratePage() {
         <p className='text-red-600 italic font-bold'>{error}</p>
       </div>
 
-      <div className='flex'>
+      <div className='flex flex-wrap'>
         {images.map((image, index) => (
           <img
             key={index}
