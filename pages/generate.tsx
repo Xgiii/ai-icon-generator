@@ -1,5 +1,7 @@
 import axios from 'axios';
+import { saveAs } from 'file-saver';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 import React, { useState } from 'react';
 import RadioButton from '../components/RadioButton';
 
@@ -61,6 +63,10 @@ function GeneratePage() {
       setLoading(false);
       setError(error.message);
     }
+  }
+
+  function downloadHandler(url: string) {
+    saveAs(url, 'generated icon');
   }
 
   return (
@@ -157,12 +163,21 @@ function GeneratePage() {
 
       <div className='flex flex-wrap'>
         {images.map((image, index) => (
-          <img
-            key={index}
-            src={image.url}
-            alt='generated icon'
-            className='w-[200px] h-[200px] object-center'
-          />
+          <div key={index} className='relative'>
+            <img
+              src={image.url}
+              alt='generated icon'
+              className='w-[200px] h-[200px] object-center'
+            />
+            <Image
+              onClick={() => downloadHandler(image.url!)}
+              src='/download.png'
+              alt='download icon'
+              width={24}
+              height={24}
+              className='absolute bottom-2 right-2 bg-white cursor-pointer'
+            />
+          </div>
         ))}
       </div>
     </section>
