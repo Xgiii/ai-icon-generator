@@ -37,7 +37,7 @@ function MainHeader() {
         {session?.user && (
           <>
             <button
-              onClick={() => signOut()}
+              onClick={() => signOut({callbackUrl: '/'})}
               className='px-6 py-2 bg-gray-800 text-gray-400 font-semibold rounded-md uppercase'
             >
               Sign Out

@@ -30,7 +30,7 @@ function CollectionPage() {
   if (loading) return <p className='text-center animate-pulse'>Loading...</p>;
 
   return (
-    <div className='flex p-2 md:pt-4 md:px-12 lg:px-16'>
+    <div className='flex flex-wrap p-2 md:pt-4 md:px-12 lg:px-16'>
       {icons?.map((icon, index) => (
         <div key={index} className='relative'>
           <img
