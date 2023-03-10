@@ -4,13 +4,18 @@ import { saveAs } from 'file-saver';
 import axios from 'axios';
 
 function CollectionPage() {
-  const [icons, setIcons] = useState<{ url?: string }[]>();
+  const [icons, setIcons] = useState<string[]>();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
+    setError('');
     async function getIcons() {
       setLoading(true);
       const { data } = await axios.get('/api/icons');
+      if (data.length < 1) {
+        setError('You didnt generate any icon yet!');
+      }
       setIcons(data);
       setLoading(false);
     }
@@ -26,15 +31,15 @@ function CollectionPage() {
 
   return (
     <div className='flex p-2 md:pt-4 md:px-12 lg:px-16'>
-      {icons ? icons.map((icon, index) => (
+      {icons?.map((icon, index) => (
         <div key={index} className='relative'>
           <img
-            src={icon.url}
+            src={icon}
             alt='generated icon'
             className='w-[200px] h-[200px] object-center'
           />
           <Image
-            onClick={() => downloadHandler(icon.url!)}
+            onClick={() => downloadHandler(icon)}
             src='/download.png'
             alt='download icon'
             width={24}
@@ -42,7 +47,8 @@ function CollectionPage() {
             className='absolute bottom-2 right-2 bg-white cursor-pointer'
           />
         </div>
-      )): <p>You didnt genereta any icon yet</p>}
+      ))}
+      {error && <p>{error}</p>}
     </div>
   );
 }

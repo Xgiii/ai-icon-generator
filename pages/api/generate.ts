@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
 import { Configuration, OpenAIApi } from 'openai';
 import { connectToDb } from '../../utils/db';
+import cloudinary from 'cloudinary';
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,10 +33,15 @@ export default async function handler(
     const client = await connectToDb();
     const usersCol = client.db().collection('users');
 
-    await usersCol.updateOne(
-      { email: user?.email },
-      { $push: { icons: { $each: response.data.data } } }
-    );
+    for (let i = 0; i < response.data.data.length; i++) {
+      const cloudinaryUrl = await cloudinary.v2.uploader.upload(
+        response.data.data[i].url!
+      );
+      await usersCol.updateOne(
+        { email: user?.email },
+        { $push: { icons: cloudinaryUrl.url } }
+      );
+    }
 
     client.close();
 

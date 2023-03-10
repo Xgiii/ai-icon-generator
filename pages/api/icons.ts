@@ -18,7 +18,7 @@ export default async function handler(
     const usersCol = client.db().collection('users');
     const foundedUser = await usersCol.findOne({ email: user?.email });
 
-    const icons = foundedUser?.icons;
+    const icons = foundedUser?.icons.reverse();
     client.close();
     res.status(201).json(icons);
   } catch (error) {
