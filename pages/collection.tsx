@@ -4,9 +4,8 @@ import { saveAs } from 'file-saver';
 import axios from 'axios';
 
 function CollectionPage() {
-  const [icons, setIcons] = useState<{ url?: string }[]>([]);
+  const [icons, setIcons] = useState<{ url?: string }[]>();
   const [loading, setLoading] = useState(false);
-  console.log(icons);
 
   useEffect(() => {
     async function getIcons() {
@@ -27,7 +26,7 @@ function CollectionPage() {
 
   return (
     <div className='flex p-2 md:pt-4 md:px-12 lg:px-16'>
-      {icons.map((icon, index) => (
+      {icons ? icons.map((icon, index) => (
         <div key={index} className='relative'>
           <img
             src={icon.url}
@@ -43,7 +42,7 @@ function CollectionPage() {
             className='absolute bottom-2 right-2 bg-white cursor-pointer'
           />
         </div>
-      ))}
+      )): <p>You didnt genereta any icon yet</p>}
     </div>
   );
 }

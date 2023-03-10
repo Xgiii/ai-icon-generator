@@ -36,10 +36,6 @@ function MainHeader() {
         )}
         {session?.user && (
           <>
-            <p>999 credits left</p>
-            <button className='px-6 py-2 bg-blue-400 text-gray-800 font-semibold rounded-md uppercase'>
-              Buy Credits
-            </button>
             <button
               onClick={() => signOut()}
               className='px-6 py-2 bg-gray-800 text-gray-400 font-semibold rounded-md uppercase'
