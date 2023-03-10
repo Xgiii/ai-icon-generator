@@ -16,13 +16,13 @@ export default async function handler(
 
   const { user } = session;
 
-  const { prompt, n, color, style, shape } = req.body;
+  const { prompt, n, color, style } = req.body;
   const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
   });
 
   const openai = new OpenAIApi(configuration);
-  const iconPrompt = `icon of ${prompt} in ${color} ${style} iridescent material, ${shape} icon background, 3D render isometric perspective on dark background`;
+  const iconPrompt = `icon of ${prompt} in ${color} ${style} iridescent material, 3D render isometric perspective on dark background`;
   try {
     const response = await openai.createImage({
       prompt: iconPrompt,

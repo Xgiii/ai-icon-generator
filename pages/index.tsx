@@ -12,10 +12,11 @@ const Home: NextPage = () => {
       <div className='absolute top-[40%] left-[50%] -translate-x-[50%] text-center'>
         <h1 className='text-4xl'>Generate icons in seconds!</h1>
         <div className='mt-4'>
-          <Link href='/generate'>
-            <a className='px-6 py-3 bg-blue-400 text-gray-800 font-semibold rounded-md uppercase'>
-              Get Started
-            </a>
+          <Link
+            href='/generate'
+            className='px-6 py-3 bg-blue-400 text-gray-800 font-semibold rounded-md uppercase'
+          >
+            Get Started
           </Link>
         </div>
       </div>
