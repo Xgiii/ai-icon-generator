@@ -35,6 +35,7 @@ function GeneratePage() {
   const [n, setN] = useState('1');
   const [selectedColor, setSelectedColor] = useState('Blue');
   const [selectedStyle, setSelectedStyle] = useState('metalic');
+  const [selectedShape, setSelectedShape] = useState('circular');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [images, setImages] = useState<{ url?: string }[]>([]);
@@ -54,6 +55,7 @@ function GeneratePage() {
         n,
         color: selectedColor,
         style: selectedStyle,
+        shape: selectedShape,
       });
       setImages((prevState) => [...prevState, ...data.data]);
       setLoading(false);
@@ -117,7 +119,24 @@ function GeneratePage() {
       </div>
 
       <div className='flex flex-col space-y-4'>
-        <h2 className='text-2xl'>4. How many images do you want</h2>
+        <h2 className='text-2xl'>4. Select the shape of your icon</h2>
+        <div className='flex space-x-2'>
+          {shapes.map((shape, index): any => (
+            <RadioButton
+              radioGroup='shapes'
+              selected={selectedShape}
+              onSelect={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSelectedShape(e.target.value)
+              }
+              label={shape}
+              key={index}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className='flex flex-col space-y-4'>
+        <h2 className='text-2xl'>5. How many images do you want</h2>
         <input
           type='number'
           onChange={(e) => setN(e.target.value)}
